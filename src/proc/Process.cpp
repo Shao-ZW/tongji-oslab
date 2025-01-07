@@ -174,7 +174,7 @@ void Process::Expand(unsigned int newSize)
 	RetU();
 	X86Assembly::STI();
 
-	u.u_MemoryDescriptor.MapToPageTable();
+	u.u_MemoryDescriptor.NMapToPageTable();
 }
 
 void Process::Exit()
@@ -330,12 +330,19 @@ void Process::SStack()
 	md.m_StackSize += change;
 	unsigned int newSize = ProcessManager::USIZE + md.m_DataSize + md.m_StackSize;
 
-	if ( false == u.u_MemoryDescriptor.EstablishUserPageTable(md.m_TextStartAddress,
-						md.m_TextSize, md.m_DataStartAddress, md.m_DataSize, md.m_StackSize) )
-	{
+	// if ( false == u.u_MemoryDescriptor.EstablishUserPageTable(md.m_TextStartAddress,
+	// 					md.m_TextSize, md.m_DataStartAddress, md.m_DataSize, md.m_StackSize) )
+	// {
+	// 	u.u_error = User::ENOMEM;
+	// 	return;
+	// }
+
+	if ( md.m_TextSize + md.m_DataSize + md.m_StackSize + PageManager::PAGE_SIZE > md.USER_SPACE_SIZE - md.m_TextStartAddress) 
+	{ 
 		u.u_error = User::ENOMEM;
-		return;
-	}
+		Diagnose::Write("u.u_error = %d\n",u.u_error);
+		return; 
+	} 
 
 	this->Expand(newSize);
 	int dst = u.u_procp->p_addr + newSize;
@@ -346,7 +353,7 @@ void Process::SStack()
 		Utility::CopySeg(dst - change, dst);
 	}
 
-	u.u_MemoryDescriptor.MapToPageTable();
+	u.u_MemoryDescriptor.NMapToPageTable();
 }
 
 
@@ -363,12 +370,17 @@ void Process::SBreak()
 		return;
 	}
 
-	if ( false == u.u_MemoryDescriptor.EstablishUserPageTable(md.m_TextStartAddress, 
-						md.m_TextSize, md.m_DataStartAddress, newSize, md.m_StackSize) )
-	{
-		//系统调用出错时，不可以用这种方式返回。执行这条路径会导致 u.u_intflg == 1，u.u_error被错误修改为EINTR（4）；无论何故导致系统调用失败。
-		//aRetU(u.u_qsav);
-		return;
+	// if ( false == u.u_MemoryDescriptor.EstablishUserPageTable(md.m_TextStartAddress, 
+	// 					md.m_TextSize, md.m_DataStartAddress, newSize, md.m_StackSize) )
+	// {
+	// 	//系统调用出错时，不可以用这种方式返回。执行这条路径会导致 u.u_intflg == 1，u.u_error被错误修改为EINTR（4）；无论何故导致系统调用失败。
+	// 	//aRetU(u.u_qsav);
+	// 	return;
+	// }
+
+	if ( md.m_TextSize + md.m_DataSize + md.m_StackSize + PageManager::PAGE_SIZE > md.USER_SPACE_SIZE - md.m_TextStartAddress ) 
+	{ 
+		return; 
 	}
 
 	int change = newSize - md.m_DataSize;
