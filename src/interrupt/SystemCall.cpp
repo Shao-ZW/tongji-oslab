@@ -1,4 +1,6 @@
 #include "SystemCall.h"
+#include "Process.h"
+#include "ProcessManager.h"
 #include "User.h"
 #include "Kernel.h"
 #include "Regs.h"
@@ -62,7 +64,7 @@ SystemCallTableEntry SystemCall::m_SystemEntranceTable[SYSTEM_CALL_NUM] =
 	{ 1, &Sys_Setgid},				/* 46 = setgid	*/
 	{ 0, &Sys_Getgid},				/* 47 = getgid	*/
 	{ 2, &Sys_Ssig	},				/* 48 = sig	*/
-	{ 0, &Sys_Nosys	},				/* 49 = nosys	*/
+	{ 1, &Sys_Getppid },		    /* 49 = nosys	*/
 	{ 0, &Sys_Nosys	},				/* 50 = nosys	*/
 	{ 0, &Sys_Nosys	},				/* 51 = nosys	*/
 	{ 0, &Sys_Nosys	},				/* 52 = nosys	*/
@@ -723,4 +725,22 @@ int SystemCall::Sys_Ssig()
 	return 0;	/* GCC likes it ! */
 }
 
+/*	49 = getppi  count = 1  */
+int SystemCall::Sys_Getppid() 
+{
+	ProcessManager& procMgr = Kernel::Instance().GetProcessManager();
+	User& u = Kernel::Instance().GetUser();
 
+	int i;
+	int curpid = (int)u.u_arg[0];
+
+	u.u_ar0[User::EAX] = -1;
+
+	for (int i = 0; i < ProcessManager::NPROC; i++) {
+		if (procMgr.process[i].p_pid == curpid) {
+			u.u_ar0[User::EAX] = procMgr.process[i].p_ppid;
+		}
+	}
+
+	return 0;
+}

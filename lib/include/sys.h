@@ -80,4 +80,7 @@ int getswtch();
 /* 启用屏幕底部的lines行输出调试信息 */
 int trace(int lines);
 
+/* 获取父进程的PID */
+int getppid(int pid);
+
 #endif
