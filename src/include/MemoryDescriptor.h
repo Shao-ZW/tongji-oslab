@@ -18,10 +18,10 @@ public:
 	~MemoryDescriptor();
 
 public:
-	/* 申请并初始化PageDirectory，在做Map操作前使用 */
-	void Initialize();
-	/* 在释放进程时，需要调用该操作释放被占用的页表 */
-	void Release();
+	// /* 申请并初始化PageDirectory，在做Map操作前使用 */
+	// void Initialize();
+	// /* 在释放进程时，需要调用该操作释放被占用的页表 */
+	// void Release();
 
 	/* 以下函数用户完成对user结构中页表Entry的填充，该页表在进程切换时填充现有的页表 */
 	// void MapTextEntrys(unsigned long textStartAddress, unsigned long textSize, unsigned long textPageIdxInPhyMemory);

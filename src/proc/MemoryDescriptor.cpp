@@ -5,23 +5,23 @@
 #include "PageDirectory.h"
 #include "Video.h"
 
-void MemoryDescriptor::Initialize()
-{
-	KernelPageManager& kernelPageManager = Kernel::Instance().GetKernelPageManager();
+// void MemoryDescriptor::Initialize()
+// {
+// 	KernelPageManager& kernelPageManager = Kernel::Instance().GetKernelPageManager();
 	
-	/* m_UserPageTableArray需要把AllocMemory()返回的物理内存地址 + 0xC0000000 */
-	// this->m_UserPageTableArray = (PageTable*)(kernelPageManager.AllocMemory(sizeof(PageTable) * USER_SPACE_PAGE_TABLE_CNT) + Machine::KERNEL_SPACE_START_ADDRESS);
-}
+// 	/* m_UserPageTableArray需要把AllocMemory()返回的物理内存地址 + 0xC0000000 */
+// 	this->m_UserPageTableArray = (PageTable*)(kernelPageManager.AllocMemory(sizeof(PageTable) * USER_SPACE_PAGE_TABLE_CNT) + Machine::KERNEL_SPACE_START_ADDRESS);
+// }
 
-void MemoryDescriptor::Release()
-{
-	KernelPageManager& kernelPageManager = Kernel::Instance().GetKernelPageManager();
-	// if ( this->m_UserPageTableArray )
-	// {
-	// 	kernelPageManager.FreeMemory(sizeof(PageTable) * USER_SPACE_PAGE_TABLE_CNT, (unsigned long)this->m_UserPageTableArray - Machine::KERNEL_SPACE_START_ADDRESS);
-	// 	this->m_UserPageTableArray = NULL;
-	// }
-}
+// void MemoryDescriptor::Release()
+// {
+// 	KernelPageManager& kernelPageManager = Kernel::Instance().GetKernelPageManager();
+// 	if ( this->m_UserPageTableArray )
+// 	{
+// 		kernelPageManager.FreeMemory(sizeof(PageTable) * USER_SPACE_PAGE_TABLE_CNT, (unsigned long)this->m_UserPageTableArray - Machine::KERNEL_SPACE_START_ADDRESS);
+// 		this->m_UserPageTableArray = NULL;
+// 	}
+// }
 
 
 // unsigned int MemoryDescriptor::MapEntry(unsigned long virtualAddress, unsigned int size, unsigned long phyPageIdx, bool isReadWrite)

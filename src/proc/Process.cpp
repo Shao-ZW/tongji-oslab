@@ -232,7 +232,7 @@ void Process::Exit()
 	bufMgr.Bwrite(pBuf);
 
 	/* 释放内存资源 */
-	u.u_MemoryDescriptor.Release();
+	// u.u_MemoryDescriptor.Release();
 	Process* current = u.u_procp;
 	UserPageManager& userPageMgr = Kernel::Instance().GetUserPageManager();
 	userPageMgr.FreeMemory(current->p_size, current->p_addr);
